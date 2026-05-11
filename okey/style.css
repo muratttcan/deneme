@@ -1,0 +1,1484 @@
+:root {
+  --bg: #1a1d24;
+  --bg-2: #23272f;
+  --bg-3: #2c313a;
+  --fg: #e7ecf3;
+  --fg-dim: #9aa3b1;
+  --accent: #f2c94c;
+  --danger: #eb5757;
+  --safe: #27ae60;
+  --warn: #f2994a;
+  --border: #3a414c;
+
+  --v1: #8a94a6;
+  --v2: #56cc9d;
+  --v3: #5ca8e6;
+  --v4: #b48be8;
+  --v5: #eb5757;
+  --vk: #f2c94c;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.lang-switcher {
+  display: inline-flex;
+  gap: 2px;
+  margin-bottom: 2px;
+}
+.lang-btn {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  color: var(--fg-dim);
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 100ms ease, color 100ms ease, border-color 100ms ease;
+}
+.lang-btn:hover { background: var(--bg-2); color: var(--fg); border-color: var(--fg-dim); }
+.lang-btn.active {
+  background: var(--accent);
+  color: #1a1a1a;
+  border-color: var(--accent);
+}
+
+.discord {
+  color: var(--fg-dim);
+  font-size: 13px;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+.version {
+  color: var(--fg-dim);
+  font-size: 11px;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  opacity: 0.7;
+}
+
+h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.subtle { color: var(--fg-dim); font-weight: 400; }
+
+main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 240px 1fr 320px;
+  gap: 24px;
+  padding: 24px;
+  max-width: 1220px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.stats-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.chest-list, .session-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 6px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.chest-row, .session-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-3);
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 13px;
+}
+.session-row {
+  grid-template-columns: 1fr auto;
+}
+.chest-name, .session-name {
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+.chest-target {
+  color: var(--fg-dim);
+  font-size: 11px;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+}
+.chest-pct {
+  font-weight: 700;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  min-width: 44px;
+  text-align: right;
+}
+.chest-gold .chest-name,
+.session-name.chest-gold { color: #f2c94c; }
+.chest-silver .chest-name,
+.session-name.chest-silver { color: #bdc7d6; }
+.chest-bronze .chest-name,
+.session-name.chest-bronze { color: #cd7f32; }
+.chest-note {
+  color: var(--fg-dim);
+  font-size: 11px;
+  margin-top: 8px;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+}
+.session-pct {
+  color: var(--fg-dim);
+  font-size: 11px;
+}
+.session-reset {
+  margin-top: 8px;
+}
+
+.board-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 6px;
+  aspect-ratio: 1;
+  max-width: 560px;
+  width: 100%;
+  align-self: center;
+  background: var(--bg-2);
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.cell {
+  background: var(--bg-3);
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 700;
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+  transition: transform 60ms ease, border-color 100ms ease, background 100ms ease;
+}
+
+.cell:hover {
+  border-color: var(--fg);
+  transform: translateY(-1px);
+}
+
+.cell.revealed { cursor: default; }
+.cell.revealed:hover { transform: none; border-color: var(--border); }
+
+/* Revealed but not yet scored — can be claimed with a sufficient hand card.
+ * Dimmed so scored cells visually fade into the background. */
+.cell.revealed.unscored { opacity: 0.55; cursor: pointer; }
+.cell.revealed.unscored:hover { opacity: 0.85; border-color: var(--accent); }
+
+/* Unscored but unclaimable on the current turn — 5-turn with a 5 adjacent.
+ * Clicking would be caught in-game, so the helper blocks it too. */
+.cell.revealed.unscored-locked { cursor: not-allowed; opacity: 0.35; }
+.cell.revealed.unscored-locked:hover { opacity: 0.4; border-color: var(--border); }
+
+.cell[data-value="1"] { color: var(--v1); }
+.cell[data-value="2"] { color: var(--v2); }
+.cell[data-value="3"] { color: var(--v3); }
+.cell[data-value="4"] { color: var(--v4); }
+.cell[data-value="5"] { color: var(--v5); background: rgba(235, 87, 87, 0.08); }
+.cell[data-value="K"] { color: var(--vk); background: rgba(242, 201, 76, 0.1); }
+
+.cell.flashed::after {
+  content: "!";
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  font-size: 12px;
+  color: var(--warn);
+  font-weight: 700;
+}
+
+.cell.possible5 {
+  background: rgba(235, 87, 87, 0.12);
+  box-shadow: inset 0 0 0 2px rgba(235, 87, 87, 0.45);
+}
+.cell.safe5 {
+  box-shadow: inset 0 0 0 2px rgba(39, 174, 96, 0.25);
+}
+/* Flipping with the 5-card carries no catch risk here. Shown as a strong green
+ * outline that stacks on top of possible5/must5 styling when applicable. */
+.cell.safe-flip {
+  background: rgba(39, 174, 96, 0.16);
+  box-shadow: inset 0 0 0 3px rgba(39, 174, 96, 0.7);
+}
+.cell.safe-flip.must5 {
+  background: rgba(235, 87, 87, 0.25);
+  box-shadow:
+    inset 0 0 0 3px rgba(39, 174, 96, 0.75),
+    inset 0 0 0 6px rgba(235, 87, 87, 0.55);
+}
+.cell.must5 {
+  /* Looks like a revealed 5 (red text on light-red bg from data-value="5"),
+   * plus a dashed red border to show it's a deduction rather than observed. */
+  background: rgba(235, 87, 87, 0.14);
+  border-style: dashed;
+  border-color: rgba(235, 87, 87, 0.75);
+}
+.cell.possible5 .prob { color: var(--danger); }
+
+.cell.suggested {
+  border-color: var(--accent);
+  box-shadow:
+    0 0 0 4px rgba(242, 201, 76, 0.35),
+    0 0 18px 4px rgba(242, 201, 76, 0.55),
+    inset 0 0 0 2px var(--accent);
+  animation: pulse 1.3s ease-in-out infinite;
+}
+
+/* Floating "TIPP" pill badge so the suggestion is unmistakable. Sits on the
+   top-left corner of the cell, animated with the same pulse rhythm. */
+.cell.suggested::before {
+  content: "HINT";
+  position: absolute;
+  top: -10px;
+  left: -8px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  padding: 2px 7px;
+  background: var(--accent);
+  color: #1a1a1a;
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4), 0 0 8px rgba(242, 201, 76, 0.6);
+  z-index: 4;
+  pointer-events: none;
+  animation: tip-bob 1.3s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow:
+      0 0 0 4px rgba(242, 201, 76, 0.35),
+      0 0 18px 4px rgba(242, 201, 76, 0.55),
+      inset 0 0 0 2px var(--accent);
+  }
+  50% {
+    box-shadow:
+      0 0 0 8px rgba(242, 201, 76, 0.5),
+      0 0 28px 6px rgba(242, 201, 76, 0.75),
+      inset 0 0 0 2px var(--accent);
+  }
+}
+@keyframes tip-bob {
+  0%, 100% { transform: translateY(0)    rotate(-4deg); }
+  50%      { transform: translateY(-3px) rotate(-1deg); }
+}
+html[lang="de"] .cell.suggested::before { content: "TIPP"; }
+
+.money-icon-wrap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 70%;
+  height: 70%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  animation: money-wobble 1.3s ease-in-out infinite;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+}
+.money-icon-wrap svg { width: 100%; height: 100%; display: block; }
+
+@keyframes money-wobble {
+  0%, 100% { transform: translate(-50%, -50%) rotate(-10deg); }
+  50%      { transform: translate(-50%, -50%) rotate(10deg); }
+}
+
+.cell .prob {
+  position: absolute;
+  bottom: 4px;
+  left: 6px;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--fg-dim);
+  letter-spacing: 0;
+}
+
+.disclaimer {
+  background: rgba(242, 153, 74, 0.08);
+  border: 1px solid rgba(242, 153, 74, 0.3);
+  border-left: 3px solid var(--warn);
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--fg-dim);
+  line-height: 1.5;
+}
+.disclaimer strong { color: var(--warn); }
+
+.promo-text {
+  margin: 8px 0 16px 0;
+  font-size: 12px;
+  color: var(--fg-dim);
+  text-align: center;
+}
+
+.promo-text a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.promo-text a:hover {
+  text-decoration: underline;
+}
+
+.help {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: var(--fg-dim);
+}
+.help p { margin: 0 0 6px; }
+.help ul { margin: 0; padding-left: 18px; }
+.help li { margin: 2px 0; }
+.help em { color: var(--fg); font-style: normal; }
+kbd {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-size: 11px;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  color: var(--fg);
+}
+
+.info-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.info-block {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+
+.label {
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  margin-bottom: 6px;
+}
+
+.current-card {
+  font-size: 42px;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+}
+.current-card.done { color: var(--fg-dim); }
+
+.turn-hint {
+  font-size: 12px;
+  color: var(--fg-dim);
+  margin-top: 4px;
+}
+
+.score {
+  font-size: 34px;
+  font-weight: 700;
+}
+.score.good { color: var(--safe); }
+.score-target {
+  font-size: 11px;
+  color: var(--fg-dim);
+  margin-top: 2px;
+}
+.score-ceiling {
+  font-size: 11px;
+  color: var(--fg-dim);
+  margin-top: 6px;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+}
+.score-ceiling.unreachable { color: var(--danger); }
+.score-ceiling.within-reach { color: var(--safe); }
+
+.game-gold-pct {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+}
+.game-gold-pct.cold  { color: var(--danger); }
+.game-gold-pct.warm  { color: var(--warn); }
+.game-gold-pct.hot   { color: var(--safe); }
+.game-gold-note {
+  font-size: 11px;
+  color: var(--fg-dim);
+  margin-top: 6px;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+.toast {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-2);
+  border: 1px solid var(--warn);
+  border-left: 3px solid var(--warn);
+  color: var(--fg);
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-size: 13px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease, transform 180ms ease;
+  z-index: 1000;
+  max-width: 90vw;
+}
+.toast.toast-show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(2px);
+}
+
+.remaining {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+.remaining li {
+  background: var(--bg-3);
+  border-radius: 4px;
+  padding: 6px 8px;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.remaining .v { font-weight: 700; }
+.remaining[data-v="1"] .v { color: var(--v1); }
+
+.suggestion-note {
+  font-size: 13px;
+  color: var(--fg);
+  line-height: 1.5;
+}
+
+.suggestion-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.solver-mode-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.solver-mode {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.5px;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+}
+.solver-toggle {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  color: var(--fg-dim);
+  padding: 2px 8px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 100ms ease, color 100ms ease, border-color 100ms ease;
+}
+.solver-toggle:hover {
+  background: var(--bg-2);
+  color: var(--fg);
+  border-color: var(--fg-dim);
+}
+
+.button-row {
+  display: flex;
+  gap: 8px;
+}
+.action-btn,
+.reset-btn {
+  flex: 1;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  color: var(--fg);
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 100ms ease, border-color 100ms ease, opacity 100ms ease;
+}
+.action-btn:hover:not(:disabled) { background: var(--bg-2); border-color: var(--fg-dim); }
+.action-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.reset-btn:hover { background: var(--danger); border-color: var(--danger); }
+
+footer {
+  padding: 12px 24px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  text-align: center;
+}
+
+@media (max-width: 1000px) {
+  main {
+    grid-template-columns: 1fr;
+  }
+  .board { max-width: 100%; }
+}
+
+/* Money rain — fires when this game's gold chance hits 100%. The container is
+   non-interactive (pointer-events: none) so it never blocks clicks. Coins are
+   absolutely positioned and removed once their fall animation ends. */
+.money-rain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 9999;
+  /* Default to display:none so the empty container doesn't sit over the
+     Twitch iframe — Twitch's anti-clickjacking detection blocks chat when
+     ANY element overlaps their iframe rect, even with pointer-events:none. */
+  display: none;
+}
+.money-rain.active { display: block; }
+.money-rain .coin {
+  position: absolute;
+  top: -10vh;
+  font-size: 28px;
+  user-select: none;
+  will-change: transform, opacity;
+  animation: coinFall linear forwards;
+}
+@keyframes coinFall {
+  0%   { transform: translateY(0) rotate(0deg);    opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateY(115vh) rotate(720deg); opacity: 0.2; }
+}
+
+/* Gold-locked glow — pulses the gold-chance % when this game can no longer
+   miss the gold chest. Uses currentColor so it picks up the .hot tint. */
+.game-gold-pct.locked {
+  animation: goldLockedPulse 1.4s ease-in-out infinite;
+  text-shadow: 0 0 8px currentColor, 0 0 18px currentColor;
+}
+@keyframes goldLockedPulse {
+  0%, 100% { filter: brightness(1);    text-shadow: 0 0 6px currentColor, 0 0 14px currentColor; }
+  50%      { filter: brightness(1.35); text-shadow: 0 0 12px currentColor, 0 0 26px currentColor; }
+}
+
+/* Like block — sits in the stats sidebar above the promo. Subtle gradient
+   panel + soft pink halo so it reads as a friendly call-to-action without
+   competing with the solver stats above. */
+.like-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 12px;
+  margin: 12px 0 4px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(255, 83, 115, 0.07), rgba(255, 83, 115, 0.02) 60%, transparent);
+  text-align: center;
+}
+.like-prompt {
+  margin: 0;
+  font-size: 12px;
+  color: var(--fg-dim);
+  line-height: 1.35;
+}
+.like-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 18px;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  color: var(--fg);
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease, transform 120ms ease, box-shadow 200ms ease;
+}
+.like-btn:hover:not(:disabled) {
+  background: var(--bg-2);
+  border-color: #ff5373;
+  box-shadow: 0 0 0 4px rgba(255, 83, 115, 0.15);
+}
+.like-btn:active:not(:disabled) { transform: scale(0.96); }
+.like-btn:disabled { cursor: default; opacity: 0.95; }
+.like-btn.liked {
+  border-color: rgba(255, 83, 115, 0.55);
+  box-shadow: 0 0 0 3px rgba(255, 83, 115, 0.18);
+}
+.like-btn .like-heart {
+  font-size: 22px;
+  line-height: 1;
+  color: var(--fg-dim);
+  transition: color 200ms ease, transform 200ms ease, text-shadow 200ms ease;
+}
+.like-btn:hover:not(:disabled) .like-heart { color: #ff7a93; }
+.like-btn.liked .like-heart {
+  color: #ff5373;
+  text-shadow: 0 0 10px rgba(255, 83, 115, 0.65);
+  animation: likeBump 380ms ease;
+}
+.like-btn .like-count {
+  font-variant-numeric: tabular-nums;
+  min-width: 1.6em;
+  text-align: right;
+  font-size: 15px;
+}
+@keyframes likeBump {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.55); }
+  70%  { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+
+/* Header controls row — toggles + lang switcher share one line, all matching
+   the lang-btn height/typography so it reads as a single bar. */
+.header-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.header-toggles {
+  display: inline-flex;
+  gap: 2px;
+}
+.icon-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 22px;
+  min-width: 28px;
+  padding: 0 6px;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  color: var(--fg);
+  font-size: 12px;
+  line-height: 1;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 100ms ease, color 100ms ease, border-color 100ms ease;
+}
+.icon-toggle:hover { background: var(--bg-2); border-color: var(--fg-dim); }
+.icon-toggle .icon-off { display: none; }
+.icon-toggle.off .icon-on { display: none; }
+.icon-toggle.off .icon-off { display: inline; opacity: 0.7; }
+
+/* Minimal UI — strips everything except the current card, the board, and the
+   undo/reset row. Sidebars collapse so the board fills the screen. */
+body.minimal-ui main {
+  grid-template-columns: 1fr;
+}
+body.minimal-ui .stats-panel,
+body.minimal-ui .disclaimer,
+body.minimal-ui .help {
+  display: none;
+}
+body.minimal-ui .info-panel > .info-block { display: none; }
+body.minimal-ui .info-panel > .info-block:first-child,           /* current card */
+body.minimal-ui .info-panel > .info-block.button-row {           /* undo + reset */
+  display: block;
+}
+body.minimal-ui .board { max-width: 720px; margin: 0 auto; }
+
+/* Twitch chat embed — sits at the bottom of the right info-panel. The iframe
+   is owned by Twitch (we can't restyle its internals), so we contain it in a
+   bordered card to match the rest of the panel. Hidden in minimal-ui mode by
+   the existing `.info-panel > .info-block { display: none; }` rule. */
+.chat-block .label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+.chat-channel {
+  font-size: 11px;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  color: var(--accent);
+  text-decoration: none;
+  letter-spacing: 0.3px;
+}
+.chat-channel:hover { text-decoration: underline; }
+.twitch-chat-mount {
+  height: 460px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: #18181b;
+}
+.twitch-chat-mount iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+/* Page-level horizontal layout: main grid (centered, max-width preserved) on
+   the left, persistent Twitch chat column on the right. The chat sticks to
+   the right edge of the viewport, independent of main's max-width. */
+.page {
+  display: flex;
+  flex: 1;
+  align-items: stretch;
+  gap: 0;
+  min-height: 0;
+}
+.page > main {
+  flex: 1;
+  min-width: 0;
+}
+.chat-panel {
+  flex: 0 0 420px;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 24px 24px 0;
+  border-left: 1px solid var(--border);
+}
+.chat-panel .chat-block {
+  display: flex;
+  flex-direction: column;
+  margin-left: 24px;
+  height: 50vh;
+}
+.chat-panel .twitch-chat-mount {
+  flex: 1;
+  height: auto;
+  min-height: 0;
+}
+
+/* Hide chat in minimal-UI mode along with the rest of the chrome. */
+body.minimal-ui .chat-panel { display: none; }
+body.minimal-ui .chat-tab { display: none; }
+/* Manual chat collapse from the edge tab. */
+body.chat-hidden .chat-panel { display: none; }
+
+/* Edge tab — half-pill button glued to the chat panel's left border (or to
+   the viewport's right edge when chat is collapsed). Arrow points toward the
+   action: ◀ to expand, ▶ to collapse. */
+.chat-tab {
+  position: fixed;
+  top: 50%;
+  right: 420px; /* matches .chat-panel flex basis when chat is open */
+  transform: translateY(-50%);
+  width: 22px;
+  height: 56px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-right: 0;
+  color: var(--fg-dim);
+  border-radius: 8px 0 0 8px;
+  cursor: pointer;
+  z-index: 50;
+  transition: right 160ms ease, background 120ms ease, color 120ms ease;
+}
+.chat-tab:hover { background: var(--bg-2); color: var(--fg); }
+.chat-tab-arrow {
+  display: inline-block;
+  width: 0; height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 6px solid currentColor; /* chat open → arrow points right (toward where it'll collapse) */
+}
+body.chat-hidden .chat-tab { right: 0; }
+body.chat-hidden .chat-tab-arrow {
+  border-left: 0;
+  border-right: 6px solid currentColor; /* chat hidden → arrow points left (toward where it'll re-open) */
+}
+
+/* Narrow viewports — drop the chat under main rather than squashing the grid. */
+@media (max-width: 1100px) {
+  .page { flex-direction: column; }
+  .chat-panel {
+    flex: 0 0 auto;
+    padding: 0 24px 24px;
+    border-left: 0;
+    border-top: 1px solid var(--border);
+  }
+  .chat-panel .chat-block { margin-left: 0; margin-top: 16px; }
+  .chat-panel .twitch-chat-mount { min-height: 400px; }
+  .chat-tab { display: none; }
+}
+
+.version-views {
+  margin-left: 6px;
+  color: var(--fg-dim);
+  opacity: 0.85;
+}
+.version-views::before {
+  content: "·";
+  margin-right: 6px;
+  opacity: 0.7;
+}
+
+/* About modal — full-viewport overlay, scrollable card. Hidden via [hidden].
+   Backdrop click + close button + Escape all dismiss. */
+.modal[hidden] { display: none; }
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+}
+.modal-card {
+  position: relative;
+  max-width: 640px;
+  width: 100%;
+  max-height: 86vh;
+  overflow: auto;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px 28px 32px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  color: var(--fg);
+  line-height: 1.5;
+  font-size: 14px;
+}
+.modal-card h2 {
+  margin: 0 0 18px;
+  font-size: 20px;
+}
+.modal-card h3 {
+  margin: 22px 0 8px;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+.modal-card p { margin: 6px 0 10px; }
+.modal-card ul { margin: 6px 0 12px; padding-left: 20px; }
+.modal-card li { margin: 3px 0; }
+.modal-card em { color: var(--accent); font-style: normal; }
+.modal-card b { color: var(--fg); }
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: 0;
+  color: var(--fg-dim);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 100ms ease, color 100ms ease;
+}
+.modal-close:hover { background: var(--bg-3); color: var(--fg); }
+
+/* ===== okey-specific overrides (was okey-style.css) ===== */
+/* Okey helper — extends the base style.css with okey-specific board, palette,
+   and combo-list styles. Layout shape (header/main grid/chat panel) is already
+   handled by style.css; we override only what's different. */
+
+:root {
+  --okey-red:    #eb5757;
+  --okey-blue:   #5ca8e6;
+  --okey-yellow: #f2c94c;
+
+  --okey-red-bg:    rgba(235, 87, 87, 0.16);
+  --okey-blue-bg:   rgba(92, 168, 230, 0.16);
+  --okey-yellow-bg: rgba(242, 201, 76, 0.16);
+}
+
+/* ---------- center column layout ---------- */
+
+.board-panel {
+  gap: 18px;
+}
+
+.board-area, .palette-area {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.board-label {
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+
+/* ---------- 5-slot board ---------- */
+
+.okey-board {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  background: var(--bg-2);
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.slot {
+  position: relative;
+  aspect-ratio: 5 / 7;
+  background: var(--bg-3);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  color: var(--fg);
+  transition: transform 80ms ease, border-color 100ms ease, box-shadow 120ms ease;
+}
+.slot:hover { transform: translateY(-1px); border-color: var(--fg-dim); }
+
+.slot-empty .slot-placeholder {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--fg-dim);
+  opacity: 0.4;
+}
+
+/* Card body for filled slots and palette buttons. The corner pips + center
+   pip mimic a playing card without leaning on suit imagery (none here). */
+.slot-filled, .palette-card {
+  position: relative;
+}
+.slot-filled[data-color="R"], .palette-card[data-color="R"] {
+  background: var(--okey-red-bg);
+  border-color: var(--okey-red);
+  color: var(--okey-red);
+}
+.slot-filled[data-color="B"], .palette-card[data-color="B"] {
+  background: var(--okey-blue-bg);
+  border-color: var(--okey-blue);
+  color: var(--okey-blue);
+}
+.slot-filled[data-color="Y"], .palette-card[data-color="Y"] {
+  background: var(--okey-yellow-bg);
+  border-color: var(--okey-yellow);
+  color: var(--okey-yellow);
+}
+
+.card-corner {
+  position: absolute;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+}
+.card-corner.top-left { top: 6px; left: 8px; }
+.card-corner.bottom-right { bottom: 6px; right: 8px; transform: rotate(180deg); }
+.card-pip {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.slot-picked {
+  box-shadow:
+    0 0 0 3px rgba(255, 255, 255, 0.7),
+    0 0 12px rgba(255, 255, 255, 0.35);
+  transform: translateY(-2px);
+}
+.slot-picked::after {
+  content: "PICK";
+  position: absolute;
+  top: -10px;
+  right: -8px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  padding: 2px 7px;
+  background: var(--fg);
+  color: #1a1a1a;
+  border-radius: 999px;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.slot-suggested:not(.slot-picked) {
+  box-shadow:
+    0 0 0 3px rgba(242, 201, 76, 0.45),
+    0 0 14px 4px rgba(242, 201, 76, 0.45);
+  animation: okeyPulse 1.4s ease-in-out infinite;
+}
+.slot-suggested:not(.slot-picked)::before {
+  content: "HINT";
+  position: absolute;
+  top: -10px;
+  left: -8px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  padding: 2px 7px;
+  background: var(--accent);
+  color: #1a1a1a;
+  border-radius: 999px;
+  z-index: 4;
+  pointer-events: none;
+}
+
+/* Discard suggestion — solver thinks the EV of replacing these cards beats
+   any pick available now. Red dashed border, "DISCARD" badge to distinguish
+   from the gold pick-hint. Same pulse rhythm so they feel consistent. */
+.slot-suggested-discard:not(.slot-picked) {
+  box-shadow:
+    0 0 0 3px rgba(235, 87, 87, 0.55),
+    0 0 14px 4px rgba(235, 87, 87, 0.45);
+  border-style: dashed;
+  animation: okeyDiscardPulse 1.4s ease-in-out infinite;
+}
+.slot-suggested-discard:not(.slot-picked)::before {
+  content: "DISCARD";
+  position: absolute;
+  top: -10px;
+  left: -8px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  padding: 2px 7px;
+  background: var(--okey-red);
+  color: #1a1a1a;
+  border-radius: 999px;
+  z-index: 4;
+  pointer-events: none;
+}
+@keyframes okeyDiscardPulse {
+  0%, 100% {
+    box-shadow:
+      0 0 0 3px rgba(235, 87, 87, 0.5),
+      0 0 14px 4px rgba(235, 87, 87, 0.4);
+  }
+  50% {
+    box-shadow:
+      0 0 0 5px rgba(235, 87, 87, 0.7),
+      0 0 22px 6px rgba(235, 87, 87, 0.6);
+  }
+}
+
+@keyframes okeyPulse {
+  0%, 100% {
+    box-shadow:
+      0 0 0 3px rgba(242, 201, 76, 0.4),
+      0 0 14px 4px rgba(242, 201, 76, 0.4);
+  }
+  50% {
+    box-shadow:
+      0 0 0 5px rgba(242, 201, 76, 0.6),
+      0 0 22px 6px rgba(242, 201, 76, 0.65);
+  }
+}
+
+/* ---------- practice-mode toggle (header) ---------- */
+
+.practice-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  user-select: none;
+}
+.practice-toggle-text {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  color: var(--fg-dim);
+}
+.practice-toggle:hover .practice-toggle-text { color: var(--fg); }
+.practice-toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.practice-toggle-slider {
+  position: relative;
+  width: 32px;
+  height: 16px;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  transition: background 120ms ease, border-color 120ms ease;
+}
+.practice-toggle-slider::before {
+  content: "";
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  width: 12px;
+  height: 12px;
+  background: var(--fg-dim);
+  border-radius: 50%;
+  transition: transform 140ms ease, background 140ms ease;
+}
+.practice-toggle:hover .practice-toggle-slider {
+  border-color: var(--fg-dim);
+}
+.practice-toggle input:checked ~ .practice-toggle-slider {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.practice-toggle input:checked ~ .practice-toggle-slider::before {
+  transform: translateX(16px);
+  background: #1a1a1a;
+}
+.practice-toggle input:focus-visible ~ .practice-toggle-slider {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* When practice mode is on, the body gets `practice-on` so the palette
+   visually fades — the cards are still rendered (so you can see what's
+   left in the deck) but the area reads as "informational only". */
+body.practice-on .palette-area .board-label::after {
+  content: " · auto-drawing";
+  color: var(--accent);
+  font-weight: 700;
+}
+body.practice-on .okey-palette {
+  opacity: 0.7;
+}
+
+/* ---------- 24-card palette ---------- */
+
+.okey-palette {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--bg-2);
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.palette-row {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 6px;
+}
+
+.palette-card {
+  aspect-ratio: 5 / 7;
+  background: var(--bg-3);
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--fg);
+  transition: transform 80ms ease, border-color 100ms ease, background 100ms ease;
+}
+.palette-card:hover:not(.used) {
+  transform: translateY(-1px);
+  filter: brightness(1.15);
+}
+.palette-card .card-pip { font-size: 22px; }
+.palette-card .card-corner { font-size: 10px; }
+.palette-card .card-corner.top-left { top: 3px; left: 4px; }
+.palette-card .card-corner.bottom-right { bottom: 3px; right: 4px; }
+
+/* Greyed-out palette card — already on the field, can't be added again. The
+   .used class wins over the color-tinted backgrounds since it's defined later.
+   filter: grayscale strips the color so it reads as "out of play" at a glance. */
+.palette-card.used {
+  filter: grayscale(0.85) brightness(0.55);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.palette-card.used:hover { transform: none; }
+
+/* ---------- right info panel ---------- */
+
+.round-row {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+}
+.round-num {
+  font-size: 34px;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+}
+.round-sep, .round-total {
+  font-size: 18px;
+  color: var(--fg-dim);
+}
+
+.pick-total {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--fg);
+}
+.pick-label {
+  font-size: 12px;
+  color: var(--fg-dim);
+  margin-top: 4px;
+}
+
+.chest-projection {
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: inline-block;
+}
+.chest-projection.chest-gold          { color: #f2c94c; background: rgba(242, 201, 76, 0.12); }
+.chest-projection.chest-silver-locked { color: #bdc7d6; background: rgba(189, 199, 214, 0.12); }
+.chest-projection.chest-bronze        { color: #cd7f32; background: rgba(205, 127, 50, 0.12); }
+.chest-projection.chest-tbd           { color: var(--fg-dim); background: var(--bg-3); }
+
+/* ---------- combo list ---------- */
+
+.combo-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.combo-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-3);
+  border-radius: 4px;
+  padding: 6px 8px;
+  font-size: 12px;
+}
+.combo-best {
+  background: rgba(242, 201, 76, 0.1);
+  border: 1px solid rgba(242, 201, 76, 0.4);
+}
+.combo-current {
+  outline: 2px solid var(--fg);
+  outline-offset: -1px;
+}
+.combo-cards {
+  display: inline-flex;
+  gap: 3px;
+}
+.combo-card {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+}
+.combo-card[data-color="R"] { color: var(--okey-red);    border-color: var(--okey-red);    background: var(--okey-red-bg); }
+.combo-card[data-color="B"] { color: var(--okey-blue);   border-color: var(--okey-blue);   background: var(--okey-blue-bg); }
+.combo-card[data-color="Y"] { color: var(--okey-yellow); border-color: var(--okey-yellow); background: var(--okey-yellow-bg); }
+.combo-type {
+  font-size: 11px;
+  color: var(--fg-dim);
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+}
+.combo-score {
+  font-weight: 700;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  min-width: 32px;
+  text-align: right;
+}
+.combo-empty {
+  background: var(--bg-3);
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 12px;
+  color: var(--fg-dim);
+  text-align: center;
+}
+
+/* ---------- scoring reference list ---------- */
+
+.scoring-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.scoring-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-3);
+  border-radius: 4px;
+  padding: 5px 8px;
+  font-size: 12px;
+}
+.scoring-name { color: var(--fg); }
+.scoring-range {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  color: var(--fg-dim);
+  font-size: 11px;
+}
+
+/* ---------- run summary card ---------- */
+
+.run-summary {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-size: 13px;
+}
+.summary-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.chest-pill {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+.chest-pill.chest-gold   { background: rgba(242, 201, 76, 0.18); color: #f2c94c; }
+.chest-pill.chest-silver { background: rgba(189, 199, 214, 0.18); color: #bdc7d6; }
+.chest-pill.chest-bronze { background: rgba(205, 127, 50, 0.18); color: #cd7f32; }
+
+.log-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.log-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-3);
+  border-radius: 4px;
+  padding: 5px 8px;
+  font-size: 12px;
+}
+.log-round {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  color: var(--fg-dim);
+  min-width: 26px;
+}
+.log-cards { display: inline-flex; gap: 3px; }
+.log-pts {
+  font-weight: 700;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  min-width: 32px;
+  text-align: right;
+}
+
+/* ---------- confirm button ---------- */
+
+.confirm-btn {
+  background: var(--accent);
+  color: #1a1a1a;
+  font-weight: 700;
+  border-color: var(--accent);
+}
+.confirm-btn:hover:not(:disabled) {
+  background: #ffd76b;
+  border-color: #ffd76b;
+}
+.confirm-btn:disabled {
+  background: var(--bg-3);
+  color: var(--fg-dim);
+  border-color: var(--border);
+}

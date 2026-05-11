@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Schnapp den König / Catch the King Helper – Metin2 Goldene Königsbeute Solver</title>
+  <meta name="description" content="Live Helfer für Metin2 Schnapp den König (Catch the King) im Event Goldene Königsbeute. ~44.8% Gold-Quote, kostenloser Open-Source-Solver, läuft direkt im Browser." />
+  <meta name="keywords" content="Schnapp den König, Catch the King, Goldene Königsbeute, Golden King's Loot, Metin2, Metin2 Helfer, Metin2 Helper, Metin2 Solver, Schnapp den König Helfer, König fangen, Mini-Spiel, mini-game, Gold-Truhe, Bingo, 5x5, Metin2 Event" />
+  <meta name="author" content="Jogoe" />
+  <link rel="canonical" href="https://dominikloefflerniteo.github.io/ctk-helper-jogoe/ctk/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Schnapp den König / Catch the King Helper – Metin2 Goldene Königsbeute Solver" />
+  <meta property="og:description" content="Kostenloser Browser-Helfer für das Metin2 Schnapp den König Mini-Spiel (Goldene Königsbeute / Catch the King). Live Zug-Vorschläge, ~44.8% Gold-Quote." />
+  <meta property="og:url" content="https://dominikloefflerniteo.github.io/ctk-helper-jogoe/ctk/" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:locale:alternate" content="de_DE" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Schnapp den König / Catch the King Helper – Goldene Königsbeute" />
+  <meta name="twitter:description" content="Metin2 Schnapp den König / Catch the King Solver – Live Zug-Vorschläge, ~44.8% Gold-Quote, läuft im Browser." />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="style.css" />
+  <meta name="google-site-verification" content="0dXDuDiLHQaxYC0fN4zPy8XRDauxkPCVz62au2lX4CE" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Catch the King Helper",
+    "alternateName": "Schnapp den König Helfer",
+    "description": "In-browser solver and move suggester for the Metin2 'Schnapp den König' / 'Catch the King' mini-game. Heuristic ranking with live gold-chance estimate.",
+    "applicationCategory": "GameApplication",
+    "operatingSystem": "Any (web browser)",
+    "url": "https://dominikloefflerniteo.github.io/ctk-helper-jogoe/ctk/",
+    "inLanguage": ["en", "de"],
+    "isAccessibleForFree": true,
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+    "author": { "@type": "Person", "name": "Jogoe" }
+  }
+  </script>
+</head>
+<body>
+
+
+  <div class="page">
+  <main>
+
+
+    
+
+    <section class="board-panel">
+      <div id="board" class="board" aria-label="5x5 game board"></div>
+
+      <div class="help">
+        <p data-i18n-html="helpIntro"></p>
+        <ul>
+          <li data-i18n-html="helpReveal"></li>
+          <li data-i18n-html="helpShift"></li>
+          <li data-i18n-html="helpClick"></li>
+          <li data-i18n-html="helpBackspace"></li>
+          <li data-i18n-html="helpEsc"></li>
+        </ul>
+      </div>
+    </section>
+
+    <aside class="info-panel">
+      <div class="info-block">
+        <div class="label" data-i18n="currentCard">Current card</div>
+        <div id="currentCard" class="current-card">1</div>
+        <div id="turnHint" class="turn-hint"></div>
+      </div>
+
+      <div class="info-block">
+        <div class="label" data-i18n="score">Score</div>
+        <div id="score" class="score">0</div>
+        <div class="score-target" data-i18n="target550">target 550</div>
+        <div id="scoreCeiling" class="score-ceiling"></div>
+      </div>
+
+      <div class="info-block">
+        <div class="label" data-i18n="goldChance">Gold chance (this game)</div>
+        <div id="gameGoldPct" class="game-gold-pct">&mdash;</div>
+        <div id="gameGoldNote" class="game-gold-note">&mdash;</div>
+      </div>
+
+      <div class="info-block">
+        <div class="label" data-i18n="remainingOnBoard">Remaining on board</div>
+        <ul id="remaining" class="remaining"></ul>
+      </div>
+
+      <div class="info-block">
+        <div class="label suggestion-label">
+          <span data-i18n="suggestion">Suggestion</span>
+        </div>
+        <div id="suggestionNote" class="suggestion-note">&mdash;</div>
+      </div>
+
+      <div class="info-block button-row">
+        <button id="undoBtn" class="action-btn" type="button" disabled data-i18n="undo">Undo</button>
+        <button id="resetBtn" class="reset-btn" type="button" data-i18n="reset">Reset</button>
+      </div>
+    </aside>
+  </main>
+
+
+  </div>
+
+
+
+  <footer>
+    <span class="subtle" data-i18n="footerText">Clean-room helper for Metin2 &middot; Schnapp den K&ouml;nig</span>
+    <span class="footer-sep">&middot;</span>
+    <button class="footer-link" type="button" data-open-modal="impressumModal" data-i18n="impressum">Impressum</button>
+    <span class="footer-sep">&middot;</span>
+    <button class="footer-link" type="button" data-open-modal="datenschutzModal" data-i18n="privacy">Privacy</button>
+  </footer>
+
+
+
+  <div id="aboutModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle" hidden>
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-card" tabindex="-1">
+      <button class="modal-close" type="button" aria-label="Close" data-close>&times;</button>
+      <h2 id="aboutTitle" data-i18n="aboutTitle">About this project</h2>
+
+      <h3 data-i18n="aboutPrivacyHeading">Your data</h3>
+      <div data-i18n-html="aboutPrivacyBody"></div>
+
+      <h3 data-i18n="aboutSolverHeading">How the solver works</h3>
+      <div data-i18n-html="aboutSolverBody"></div>
+
+      <h3 data-i18n="aboutFindingsHeading">What we tried</h3>
+      <div data-i18n-html="aboutFindingsBody"></div>
+
+      <h3 data-i18n="aboutLimitsHeading">Why we can't be perfect</h3>
+      <div data-i18n-html="aboutLimitsBody"></div>
+    </div>
+  </div>
+
+  <div id="impressumModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="impressumTitle" hidden>
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-card" tabindex="-1">
+      <button class="modal-close" type="button" aria-label="Close" data-close>&times;</button>
+      <h2 id="impressumTitle" data-i18n="impressumTitle">Impressum</h2>
+      <div data-i18n-html="impressumBody"></div>
+    </div>
+  </div>
+
+  <div id="datenschutzModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="datenschutzTitle" hidden>
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-card" tabindex="-1">
+      <button class="modal-close" type="button" aria-label="Close" data-close>&times;</button>
+      <h2 id="datenschutzTitle" data-i18n="datenschutzTitle">Datenschutzerklärung</h2>
+      <div data-i18n-html="datenschutzBody"></div>
+      <div class="datenschutz-controls">
+        <button id="revokeTwitchConsentBtn" type="button" class="action-btn" data-i18n="revokeTwitchConsent">Revoke Twitch chat consent</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div id="moneyRain" class="money-rain" aria-hidden="true"></div>
+  <audio id="chingSfx" src="ching.mp3" preload="auto"></audio>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://dominikloefflerniteo.github.io/ctk-helper-jogoe/sitemap.xml

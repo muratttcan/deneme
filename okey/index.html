@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Okey helper für gekkox3 uwu owo &lt;3</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Okey helper <span class="subtle">— pick the best 3 of 5</span></h1>
+    <div class="header-meta">
+      <div class="header-controls">
+        <label class="practice-toggle" title="Practice mode — auto-draws cards from the deck so you can play through a full game">
+          <span class="practice-toggle-text">Practice</span>
+          <input type="checkbox" id="practiceToggle" />
+          <span class="practice-toggle-slider"></span>
+        </label>
+        <div class="header-toggles" role="group" aria-label="Toggles">
+          <button id="minimalUiBtn" class="icon-toggle" type="button" aria-label="Toggle minimal UI" title="Toggle minimal UI">
+            <span class="icon-on">▦</span><span class="icon-off">□</span>
+          </button>
+        </div>
+      </div>
+      <span class="discord">discord: @jogoe</span>
+      <span class="version">okey · v0.1</span>
+    </div>
+  </header>
+
+  <div class="page">
+  <main>
+    <aside class="stats-panel">
+      <div class="info-block">
+        <div class="label">Chest tiers</div>
+        <ul class="chest-list">
+          <li class="chest-row chest-gold">
+            <span class="chest-name">Gold</span>
+            <span class="chest-target">&ge;400</span>
+          </li>
+          <li class="chest-row chest-silver">
+            <span class="chest-name">Silver</span>
+            <span class="chest-target">300&ndash;399</span>
+          </li>
+          <li class="chest-row chest-bronze">
+            <span class="chest-name">Bronze</span>
+            <span class="chest-target">&lt;300</span>
+          </li>
+        </ul>
+        <div class="chest-note">8 rounds per set · 100 pts max per round</div>
+      </div>
+
+      <div class="info-block">
+        <div class="label">Scoring</div>
+        <ul class="scoring-list">
+          <li><span class="scoring-name">Three of a kind</span> <span class="scoring-range">20&ndash;90</span></li>
+          <li><span class="scoring-name">Same-color run</span>  <span class="scoring-range">50&ndash;100</span></li>
+          <li><span class="scoring-name">Mixed run</span>       <span class="scoring-range">10&ndash;60</span></li>
+        </ul>
+        <div class="chest-note">Best run: same-color 6&ndash;7&ndash;8 = 100 pts</div>
+      </div>
+
+      <div class="info-block">
+        <div class="label">Session</div>
+        <ul class="session-list">
+          <li class="session-row">
+            <span class="session-name">Games</span>
+            <span><span id="sessionGames">0</span></span>
+          </li>
+          <li class="session-row">
+            <span class="session-name">Avg score</span>
+            <span><span id="sessionAvg">—</span></span>
+          </li>
+          <li class="session-row">
+            <span class="session-name chest-gold">Gold</span>
+            <span><span id="sessionGold">0</span>&nbsp;<span id="sessionPctGold" class="session-pct"></span></span>
+          </li>
+          <li class="session-row">
+            <span class="session-name chest-silver">Silver</span>
+            <span><span id="sessionSilver">0</span>&nbsp;<span id="sessionPctSilver" class="session-pct"></span></span>
+          </li>
+          <li class="session-row">
+            <span class="session-name chest-bronze">Bronze</span>
+            <span><span id="sessionBronze">0</span>&nbsp;<span id="sessionPctBronze" class="session-pct"></span></span>
+          </li>
+        </ul>
+        <button id="sessionResetBtn" class="action-btn session-reset" type="button">Reset</button>
+      </div>
+
+      <div class="promo-text">
+        See also the <a href="../ctk/">Catch the King helper</a>.
+      </div>
+    </aside>
+
+    <section class="board-panel">
+      <div class="board-area">
+        <div class="board-label">Cards on the field</div>
+        <div id="board" class="okey-board" aria-label="5-card Okey board"></div>
+      </div>
+
+      <div class="palette-area">
+        <div class="board-label">Add a card to the next empty slot</div>
+        <div id="palette" class="okey-palette" aria-label="Card palette"></div>
+      </div>
+
+      <div class="help">
+        <p>Pick the 3 cards that score the most. <em>Click a palette card</em> to drop it into the next empty slot, then click cards on the field to mark your pick. Used cards grey out in the palette so you can't pick the same card twice.</p>
+        <ul>
+          <li><kbd>R</kbd> / <kbd>B</kbd> / <kbd>Y</kbd> + <kbd>1</kbd>&ndash;<kbd>8</kbd> &mdash; type a card directly</li>
+          <li><strong>Click</strong> a card on the field &mdash; toggle it in your pick</li>
+          <li><strong>Right-click</strong> a card on the field &mdash; discard it (then enter the new card the game gave you)</li>
+          <li><kbd>Space</kbd> &mdash; auto-select the suggested 3</li>
+          <li><kbd>Enter</kbd> &mdash; confirm the pick</li>
+          <li><kbd>Backspace</kbd> &mdash; undo · <kbd>Esc</kbd> &mdash; reset (logs the run to session)</li>
+        </ul>
+      </div>
+    </section>
+
+    <aside class="info-panel">
+      <div class="info-block button-row">
+        <button id="confirmBtn" class="action-btn confirm-btn" type="button" disabled>Confirm pick</button>
+      </div>
+
+      <div class="info-block button-row">
+        <button id="undoBtn" class="action-btn" type="button" disabled>Undo</button>
+        <button id="resetBtn" class="reset-btn" type="button">Reset</button>
+      </div>
+
+      <div class="info-block">
+        <div class="label">Score</div>
+        <div id="score" class="score">0</div>
+        <div class="score-target">target 400 (gold)</div>
+        <div id="scoreCeiling" class="score-ceiling"></div>
+        <div id="chestProjection" class="chest-projection"></div>
+      </div>
+
+      <div class="info-block">
+        <div class="label">Your pick</div>
+        <div id="pickTotal" class="pick-total">0/3</div>
+        <div id="pickLabel" class="pick-label">Click cards on the board to pick.</div>
+      </div>
+
+      <div class="info-block">
+        <div class="label">Suggestion</div>
+        <div id="suggestionNote" class="suggestion-note">—</div>
+        <button id="acceptSuggestionBtn" class="action-btn" type="button" disabled>Use suggestion</button>
+      </div>
+    </aside>
+  </main>
+
+  <aside class="chat-panel">
+    <div class="info-block chat-block">
+      <div class="label">
+        <span>Chat</span>
+      </div>
+      <div id="twitchChatMount" class="twitch-chat-mount"></div>
+    </div>
+  </aside>
+  </div>
+
+  <footer>
+    <span class="subtle">Clean-room helper for Metin2 &middot; Okey-Karten-Spiel</span>
+  </footer>
+
+  <button id="chatBtn" class="chat-tab" type="button" aria-label="Toggle chat" title="Toggle chat">
+    <span class="chat-tab-arrow"></span>
+  </button>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
